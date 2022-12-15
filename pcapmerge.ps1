@@ -1,15 +1,19 @@
-$input_folder = "C:\pcap_files"
-$output_file = "C:\merged_pcap.pcap"
+$input_folder = "D:\pcap"
+$output_file = "D:\pcap\output\merged_pcap.pcap"
 
 # Get a list of all PCAP files in the input folder
 $pcap_files = Get-ChildItem -Path $input_folder -Filter "*.pcap"
 
 # Build the mergecap command with the list of PCAP files
-$mergecap_command = "mergecap.exe -w $output_file"
+[string]$mergecap_command = "$Env:Programfiles\Wireshark\mergecap.exe"
+[array]$mergecap_args = "-w", $output_file
+
 foreach ($file in $pcap_files)
 {
-    $mergecap_command = $mergecap_command + " " + $file.FullName
+    $mergecap_args = $mergecap_args + $file.FullName
 }
 
 # Execute the mergecap command
-Invoke-Expression $mergecap_command
+#write-host $mergecap_command
+#write-host $mergecap_args
+& "$mergecap_command" $mergecap_args
